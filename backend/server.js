@@ -9,15 +9,14 @@ import Meeting from './models/zoomlink.js'; // Import Meeting model
 import User from './models/User.js';
 import cron from 'node-cron';
 
-
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
-const mongodbURI = process.env.mongo_uri;
+const mongodbURI = process.env.mongo_uri || process.env.MONGO_URI;
 
 // Connect to MongoDB
-mongoose.connect(mongodbURI)
+mongoose.connect(mongodbURI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log("MongoDB connected"))
     .catch(err => console.error("MongoDB connection error:", err));
 
@@ -25,7 +24,7 @@ mongoose.connect(mongodbURI)
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({
-    origin: 'http://localhost:3001',
+    origin: 'http://localhost:3001', // Adjust this to your frontend URL in production
     optionsSuccessStatus: 200,
 }));
 
@@ -50,10 +49,12 @@ app.post("/api/login", async (req, res) => {
     const { username, password } = req.body;
     try {
         const user = await User.findOne({ username });
+        if (!user) return res.status(401).send({ message: "Invalid username or password" });
+
         const match = await bcrypt.compare(password, user.password);
         if (!match) return res.status(401).send({ message: "Invalid username or password" });
 
-        const token = jwt.sign({ id: user._id, user: user.username }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        const token = jwt.sign({ id: user._id, user: user.username }, process.env.jwt_secret, { expiresIn: '1d' });
         res.send({ message: "success", token });
     } catch (err) {
         console.error("Login Error:", err);
@@ -75,34 +76,32 @@ const verifyToken = (req, res, next) => {
 };
 
 // Schedule a meeting endpoint
-app.post("/api/meeting-shedule", async (req, res) => {
-  const { date, startTime, duration, endTime, meetLink, agenda, description } = req.body;
-  try {
-      const formattedStartTime = convertTo12HourFormat(startTime);
-      const formattedEndTime = convertTo12HourFormat(endTime);
+app.post("/api/meeting-shedule", verifyToken, async (req, res) => {
+    const { date, startTime, duration, endTime, meetLink, agenda, description } = req.body;
+    try {
+        const formattedStartTime = convertTo12HourFormat(startTime);
+        const formattedEndTime = convertTo12HourFormat(endTime);
 
-      await Meeting.create({
-          date,
-          startTime: formattedStartTime,
-          duration,
-          endTime: formattedEndTime,
-          meetLink,
-          agenda,
-          description,
-          status: 'created',
-          
-      });
-      
-      // Increment the upcoming meetings count
-      res.send({ message: "Meeting scheduled successfully", incrementUmeet: true });
-  } catch (err) {
-      console.log("Meeting Schedule Error:", err);
-      res.status(500).send({ message: "Internal Server Error" });
-  }
+        await Meeting.create({
+            date,
+            startTime: formattedStartTime,
+            duration,
+            endTime: formattedEndTime,
+            meetLink,
+            agenda,
+            description,
+            status: 'created',
+        });
+
+        res.send({ message: "Meeting scheduled successfully" });
+    } catch (err) {
+        console.log("Meeting Schedule Error:", err);
+        res.status(500).send({ message: "Internal Server Error" });
+    }
 });
 
 // Get scheduled meetings endpoint
-app.get("/get/meeting-shedule", async (req, res) => {
+app.get("/get/meeting-shedule", verifyToken, async (req, res) => {
     try {
         const meetings = await Meeting.find();
         res.json(meetings);
@@ -111,22 +110,38 @@ app.get("/get/meeting-shedule", async (req, res) => {
         res.status(500).send({ message: "Internal Server Error" });
     }
 });
+
 // Delete meeting by ID endpoint
-app.delete('/delete-meeting/:id', async (req, res) => {
-  const { id } = req.params;
-  try {
-    const result = await Meeting.findByIdAndDelete(id);
-    if (result) {
-      res.json({ message: 'Meeting deleted successfully' });
-    } else {
-      res.status(404).json({ message: 'Meeting not found' });
+app.delete('/delete-meeting/:id', verifyToken, async (req, res) => {
+    const { id } = req.params;
+    try {
+        const result = await Meeting.findByIdAndDelete(id);
+        if (result) {
+            res.json({ message: 'Meeting deleted successfully' });
+        } else {
+            res.status(404).json({ message: 'Meeting not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' });
     }
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
 });
 
-
+// Update meeting status endpoint (run via a cron job or periodically)
+app.put("/api/update-meeting-status", verifyToken, async (req, res) => {
+    try {
+        const now = new Date();
+        const updatedMeetings = await Meeting.updateMany(
+            {
+                status: 'created',
+                endTime: { $lt: now },
+            },
+            { $set: { status: 'completed' } }
+        );
+        res.json(updatedMeetings);
+    } catch (error) {
+        res.status(500).json({ error: "Failed to update meeting status" });
+    }
+});
 
 // Helper function to convert 24-hour to 12-hour format
 const convertTo12HourFormat = (time) => {
@@ -135,29 +150,6 @@ const convertTo12HourFormat = (time) => {
     const adjustedHour = hour % 12 || 12;
     return `${adjustedHour}:${minute < 10 ? '0' + minute : minute} ${period}`;
 };
-
-// Update meeting status endpoint (run via a cron job or periodically)
-// Update meeting status endpoint
-// Update meeting status endpoint (run via a cron job or periodically)
-app.put("/api/update-meeting-status", async (req, res) => {
-  try {
-    const now = new Date();
-    const updatedMeetings = await Meeting.updateMany(
-      {
-        status: 'created',
-        endTime: { $lt: now },
-      },
-      { $set: { status: 'completed' } }
-    );
-    res.json(updatedMeetings);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to update meeting status" });
-  }
-});
-
-
-
-
 
 // Schedule a cron job to run every minute to check for completed meetings
 cron.schedule('* * * * *', async () => {
@@ -180,12 +172,6 @@ cron.schedule('* * * * *', async () => {
         console.log("Error updating meeting statuses via cron:", err);
     }
 });
-
-
-
-
-
-
 
 // Start the server
 app.listen(port, () => {

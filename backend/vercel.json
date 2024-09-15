@@ -1,13 +1,13 @@
 {
   "version": 2,
   "builds": [
-    { "src": "server.js", "use": "@vercel/node" }
-  ],
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/server.js" }
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    }
   ],
   "env": {
-    "jwt_secret": "@jwt_secret",
-    "mongo_uri": "@mongo_uri"
+    "MONGO_URI": "@mongo_uri",
+    "JWT_SECRET": "@jwt_secret"
   }
 }
