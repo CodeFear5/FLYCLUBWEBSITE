@@ -15,7 +15,7 @@ const withAuth = (WrappedComponent) => {
         }
 
         try {
-          await axios.get("http://localhost:3000/api/home", {
+          await axios.get("https://flyclubwebsite-uarj.vercel.app/api/home", {
             headers: {
               Authorization: `Bearer ${token}`,
             },

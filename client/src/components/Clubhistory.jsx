@@ -9,7 +9,7 @@ const MeetingTable = () => {
   useEffect(() => {
     const fetchMeetings = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/get/meeting-shedule');
+        const response = await axios.get('https://flyclubwebsite-uarj.vercel.app/get/meeting-shedule');
         setMeetings(response.data);
       } catch (error) {
         console.error("Error fetching meetings:", error);

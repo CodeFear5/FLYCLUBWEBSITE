@@ -13,7 +13,7 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:3000/signup", {
+      await axios.post("https://flyclubwebsite-uarj.vercel.app/signup", {
         username,
         email,
         password,

@@ -8,7 +8,7 @@ const MeetingCard = ({ meeting, onDelete }) => {
   // Handle meeting deletion
   const handleDelete = async () => {
     try {
-      const response = await axios.delete(`http://localhost:3000/delete-meeting/${meeting._id}`);
+      const response = await axios.delete(`https://flyclubwebsite-uarj.vercel.app/delete-meeting/${meeting._id}`);
       if (response.data.message === 'Meeting deleted successfully') {
         onDelete(meeting._id); // Call onDelete function passed from parent
         setMessage('Meeting deleted successfully');

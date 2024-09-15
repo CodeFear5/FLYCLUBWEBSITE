@@ -12,7 +12,7 @@ const LoginPage = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:3000/api/login", {
+      const response = await axios.post("https://flyclubwebsite-uarj.vercel.app/api/login", {
         username,
         password,
       });
