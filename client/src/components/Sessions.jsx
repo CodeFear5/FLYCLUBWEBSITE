@@ -10,7 +10,7 @@ const Dashboard = () => {
     startTime: '',
     duration: '',
     agenda: '',
-    meetLink: '', // This should match the schema field name
+    meetLink: '',
     description: '',
     endTime: '',
   });
@@ -19,6 +19,9 @@ const Dashboard = () => {
   const [Tmeet, setTmeet] = useState(0);
   const [cmeet, setCmeet] = useState(0);
   const [meetings, setMeetings] = useState([]); // To hold the list of meetings
+
+  // Retrieve JWT token from localStorage
+  const token = localStorage.getItem('token');
 
   // Calculate end time based on start time and duration
   const calculateEndTime = (startTime, duration) => {
@@ -47,7 +50,11 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchMeetings = async () => {
       try {
-        const response = await axios.get("https://flyclubwebsite-uarj.vercel.app/get/meeting-shedule");
+        const response = await axios.get("https://flyclubwebsite-uarj.vercel.app/get/meeting-shedule", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
         console.log("Fetched Meetings: ", response.data);
         setMeetings(response.data);
       } catch (error) {
@@ -56,7 +63,7 @@ const Dashboard = () => {
     };
 
     fetchMeetings();
-  }, []);
+  }, [token]);
 
   // Toggle form visibility
   const toggleForm = () => setShowForm(!showForm);
@@ -65,7 +72,11 @@ const Dashboard = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('https://flyclubwebsite-uarj.vercel.app/api/meeting-shedule', formData);
+      const response = await axios.post('https://flyclubwebsite-uarj.vercel.app/api/meeting-shedule', formData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       console.log(response.data);
 
       // Reset form and hide it
@@ -91,9 +102,18 @@ const Dashboard = () => {
   };
 
   // Handle meeting deletion
-  const handleDeleteMeeting = (meetingId) => {
-    setMeetings((prevMeetings) => prevMeetings.filter((meeting) => meeting._id !== meetingId));
-    setCmeet((prevCmeet) => prevCmeet + 1); // Increment cancelled/completed meetings count
+  const handleDeleteMeeting = async (meetingId) => {
+    try {
+      await axios.delete(`https://flyclubwebsite-uarj.vercel.app/delete-meeting/${meetingId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setMeetings((prevMeetings) => prevMeetings.filter((meeting) => meeting._id !== meetingId));
+      setCmeet((prevCmeet) => prevCmeet + 1); // Increment cancelled/completed meetings count
+    } catch (error) {
+      console.error('Error deleting meeting:', error);
+    }
   };
 
   // Handle form cancel

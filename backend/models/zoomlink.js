@@ -1,17 +1,17 @@
 import mongoose from 'mongoose';
 
 const meetingSchema = new mongoose.Schema({
-    date: { type: Date, required: true },
+    date: { type: String, required: true },
     startTime: { type: String, required: true },
     duration: { type: Number, required: true },
-    endTime: { type: String, required: true },
-    meetLink: { type: String, required: true },  // Ensure this is consistent
     agenda: { type: String, required: true },
-    description: { type: String, required: false },
-    status: { type: String, default: 'created' }, // Add status with default value
-    completedAt: { type: Date },
-  });
-  
+    meetLink: { type: String, required: true },
+    description: { type: String, required: true },
+    endTime: { type: String },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    status: { type: String, default: 'Scheduled' }
+});
+
 const Meeting = mongoose.model('Meeting', meetingSchema);
 
 export default Meeting;
