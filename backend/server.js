@@ -14,7 +14,7 @@ dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
-const mongodbURI = process.env.MONGO_URI;
+const mongodbURI = process.env.mongo_uri;
 
 // Connect to MongoDB
 mongoose.connect(mongodbURI)
@@ -66,7 +66,7 @@ const verifyToken = (req, res, next) => {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) return res.status(403).send({ message: "No token provided" });
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, process.env.jwt_secret);
         req.userId = decoded.id;
         next();
     } catch (err) {

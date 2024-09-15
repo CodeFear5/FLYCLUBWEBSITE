@@ -7,7 +7,7 @@
     { "src": "/api/(.*)", "dest": "/server.js" }
   ],
   "env": {
-    "JWT_SECRET": "@jwt_secret",
-    "MONGO_URI": "@mongo_uri"
+    "jwt_secret": "@jwt_secret",
+    "mongo_uri": "@mongo_uri"
   }
 }
