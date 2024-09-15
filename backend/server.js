@@ -24,7 +24,7 @@ mongoose.connect(mongodbURI)
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({
-    origin: 'http://localhost:3001', // Adjust this to your frontend URL in production
+    origin: '*', // Adjust this to your frontend URL in production
     optionsSuccessStatus: 200,
 }));
 
