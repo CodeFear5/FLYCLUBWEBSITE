@@ -1,0 +1,27 @@
+/* src/index.css */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  table th, table td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  form div {
+    margin-bottom: 10px;
+  }
+  
+  form label {
+    margin-right: 10px;
+  }
+  
+  form input, form textarea {
+    padding: 5px;
+    width: 100%;
+    max-width: 500px;
+  }
+  

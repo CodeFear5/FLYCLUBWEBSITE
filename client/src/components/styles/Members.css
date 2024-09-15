@@ -1,0 +1,60 @@
+.members-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Center items within the section */
+  padding: 20px;
+  background-color: #f4f4f4;
+}
+
+.member-card {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff; /* Light color for better contrast */
+  padding: 20px;
+  border-radius: 12px; /* Rounded corners for a softer look */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Subtle shadow for better depth */
+  width: 250px; /* Adjust based on your needs */
+  margin: 15px; /* Space around each card */
+  height: auto; /* Flexible height to accommodate varying content */
+  text-align: center;
+  margin-bottom: 70px;
+  transition: transform 0.3s, box-shadow 0.3s; /* Smooth transition for interactions */
+}
+
+.member-card:hover {
+  transform: translateY(-5px); /* Slight lift effect on hover */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+}
+
+.member-image {
+  flex-shrink: 0;
+  width: 100px; /* Slightly larger image */
+  height: 100px; /* Maintain aspect ratio */
+  margin-right: 20px; /* Space between image and text */
+}
+
+.member-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid #ddd; /* Thicker border for better visual impact */
+}
+
+.member-info h3 {
+  margin: 0;
+  font-size: 20px; /* Larger font size for names */
+  color: #333; /* Darker color for better readability */
+}
+
+.member-info p {
+  margin: 5px 0 0 0;
+  font-size: 16px; /* Larger font size for positions */
+  color: #666; /* Slightly lighter color for positions */
+}
+
+.members-heading h2 {
+  text-align: center;
+  color: rgb(33, 33, 142); /* Dark blue for a professional look */
+  margin-bottom: 30px; /* Space below the heading */
+}

@@ -1,0 +1,72 @@
+.meeting-card {
+  width: 780px;
+  margin: 20px auto;
+  padding: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  font-family: 'Arial', sans-serif;
+  overflow: hidden;
+}
+
+.card-header {
+  background-color: #283593; /* Dark Blue Header */
+  color: white;
+  padding: 15px;
+  font-size: 1.2em;
+  font-weight: bold;
+  text-align: center;
+}
+
+.card-body {
+  padding: 15px;
+  text-align: left;
+}
+
+.card-body p {
+  margin: 10px 0;
+  font-size: 1em;
+}
+
+.join-link {
+  background-color: #FFA726; /* Orange Button */
+  color: white;
+  padding: 8px 16px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  display: inline-block;
+}
+
+.join-link:hover {
+  background-color: #FB8C00; /* Darker Orange on hover */
+}
+
+.more-actions-btn {
+  background-color: #FFA726;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  width: 100%;
+  font-size: 1em;
+  margin-top: 10px;
+}
+
+.more-actions-btn:hover {
+  background-color: #FB8C00; /* Darker Orange on hover */
+}
+.cancel-button {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.cancel-button:hover {
+  background-color: #ff3333;
+}
