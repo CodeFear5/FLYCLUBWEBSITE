@@ -173,6 +173,10 @@ cron.schedule('* * * * *', async () => {
     }
 });
 
+app.get('/', (req, res) => {
+    res.send('Welcome to FlyClub Website');
+  });
+  
 // Start the server
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
