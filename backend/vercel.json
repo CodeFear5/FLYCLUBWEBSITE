@@ -11,6 +11,15 @@
         "src": "/(.*)",
         "dest": "/server.js"
       }
-    ]
-  }
+    ],
+
+    
   
+  
+  
+    "functions": {
+      "api/**/*.js": {
+        "runtime": "nodejs16.x"
+      }
+    }
+  }
