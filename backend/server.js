@@ -29,17 +29,6 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Verify Token Middleware
-const verifyToken = (req, res, next) => {
-    const token = req.headers['authorization']?.split(' ')[1];
-    if (!token) return res.status(401).json({ message: 'No token provided' });
-
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-        if (err) return res.status(401).json({ message: 'Invalid token' });
-        req.userId = decoded.id;
-        next();
-    });
-};
 
 // Routes
 app.post('/api/login', async (req, res) => {
@@ -64,8 +53,13 @@ app.post('/api/register', async (req, res) => {
     res.status(201).json({ message: 'User registered successfully' });
 });
 
+app.get('/api/meeting-shedule', async (req, res) => {
+    const meetings = await Meeting.find({ userId: req.userId });
+    res.json(meetings);
+});
+
 // Schedule Meeting
-app.post('/api/meeting-schedule', verifyToken, async (req, res) => {
+app.post('/api/meeting-shedule', async (req, res) => {
     const { date, startTime, duration, agenda, meetLink, description, endTime } = req.body;
     const meeting = new Meeting({ date, startTime, duration, agenda, meetLink, description, endTime, userId: req.userId });
     await meeting.save();
@@ -73,20 +67,20 @@ app.post('/api/meeting-schedule', verifyToken, async (req, res) => {
 });
 
 // Get Meetings
-app.get('/get/meeting-shedule', verifyToken, async (req, res) => {
+app.get('/api/login', async (req, res) => {
     const meetings = await Meeting.find({ userId: req.userId });
     res.json(meetings);
 });
 
 // Delete Meeting
-app.delete('/delete-meeting/:id', verifyToken, async (req, res) => {
+app.delete('/delete-meeting/:id', async (req, res) => {
     const { id } = req.params;
     await Meeting.findByIdAndDelete(id);
     res.json({ message: 'Meeting deleted successfully' });
 });
 
 // Update Meeting Status
-app.put('/api/update-meeting-status', verifyToken, async (req, res) => {
+app.put('/api/update-meeting-status', async (req, res) => {
     const { id, status } = req.body;
     const updatedMeeting = await Meeting.findByIdAndUpdate(id, { status }, { new: true });
     res.json(updatedMeeting);
