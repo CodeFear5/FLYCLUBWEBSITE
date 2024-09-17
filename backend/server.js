@@ -86,6 +86,8 @@ app.put('/api/update-meeting-status', async (req, res) => {
     res.json(updatedMeeting);
 });
 
+
+app.get("/", console.log("server is succefully running") )
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
