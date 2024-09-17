@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
@@ -12,18 +11,19 @@ const LoginPage = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("https://flyclubwebsite-uarj.vercel.app/api/login", {
+      const response = await axios.post("http://localhost:3000/api/login", {
         username,
         password,
       });
-      if (response.data.message === "success") {
-        console.log(response.data.token);
-        localStorage.setItem("token", response.data.token);
-        navigate("/sessions");
+
+      if (response.status === 200) {
+        console.log("Token:", response.data.token);
+        localStorage.setItem("token", response.data.token); 
+        navigate("/"); 
       }
     } catch (err) {
-      alert("Invalid password or username");
-      console.log(err);
+      alert("Invalid username or password");
+      console.error("Login error:", err.response?.data?.message || err.message);
     }
   };
 

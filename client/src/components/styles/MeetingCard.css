@@ -11,7 +11,7 @@
 }
 
 .card-header {
-  background-color: #283593; /* Dark Blue Header */
+  background-color: #283593; 
   color: white;
   padding: 15px;
   font-size: 1.2em;
@@ -30,7 +30,7 @@
 }
 
 .join-link {
-  background-color: #FFA726; /* Orange Button */
+  background-color: #FFA726; 
   color: white;
   padding: 8px 16px;
   border-radius: 5px;
@@ -40,7 +40,7 @@
 }
 
 .join-link:hover {
-  background-color: #FB8C00; /* Darker Orange on hover */
+  background-color: #FB8C00; 
 }
 
 .more-actions-btn {
@@ -56,7 +56,7 @@
 }
 
 .more-actions-btn:hover {
-  background-color: #FB8C00; /* Darker Orange on hover */
+  background-color: #FB8C00; 
 }
 .cancel-button {
   background-color: #ff4d4d;

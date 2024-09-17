@@ -7,10 +7,16 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import Meeting from './models/zoomlink.js'; // Import Meeting model
 import User from './models/User.js';
-import cron from 'node-cron';
+import multer  from 'multer'
+import Data from './models/history.js'
+import path from 'path';
+import { fileURLToPath } from 'url'; // Import required for ES module __dirname
+import { dirname } from 'path'; // Import dirname
 
 dotenv.config();
-
+// Define __dirname for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 const app = express();
 const port = process.env.PORT || 3000;
 const mongodbURI = process.env.MONGO_URI;
@@ -24,16 +30,19 @@ mongoose.connect(mongodbURI)
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({
-    origin: 'https://flyclub.vercel.app', // Adjust this to your frontend URL in production
-    methods: ['GET', 'POST', 'DELETE', 'PUT'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    origin: 'http://localhost:3001', // Adjust this to your frontend URL in production
 }));
-
-
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 // Routes
 app.post('/api/login', async (req, res) => {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    const { username, password } = req.body;
+
+    // Check for missing fields
+    if (!username || !password) {
+        return res.status(400).json({ message: 'Username and password are required' });
+    }
+
+    const user = await User.findOne({ username });
     if (!user) return res.status(404).json({ message: 'User not found' });
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -44,50 +53,150 @@ app.post('/api/login', async (req, res) => {
 });
 
 app.post('/api/register', async (req, res) => {
-    const { email, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const { email, password, username } = req.body;
 
-    const newUser = new User({ email, password: hashedPassword });
-    await newUser.save();
+    // Check for missing fields
+    if (!email || !password || !username) {
+        return res.status(400).json({ message: 'Email, username, and password are required' });
+    }
 
-    res.status(201).json({ message: 'User registered successfully' });
+    try {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = new User({ email, password: hashedPassword, username });
+        await newUser.save();
+
+        res.status(201).json({ message: 'User registered successfully' });
+    } catch (error) {
+        console.error('Error during registration:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
 });
 
-app.get('/api/meeting-shedule', async (req, res) => {
-    const meetings = await Meeting.find({ userId: req.userId });
-    res.json(meetings);
+app.get('/get/meeting-shedule', async (req, res) => {
+  try {
+      const meetings = await Meeting.find();
+      res.status(200).json(meetings);
+  } catch (error) {
+      console.error('Error fetching meetings:', error);
+      res.status(500).json({ success: false, error: 'Server Error' });
+  }
 });
 
-// Schedule Meeting
 app.post('/api/meeting-shedule', async (req, res) => {
-    const { date, startTime, duration, agenda, meetLink, description, endTime } = req.body;
-    const meeting = new Meeting({ date, startTime, duration, agenda, meetLink, description, endTime, userId: req.userId });
-    await meeting.save();
-    res.status(201).json({ message: 'Meeting scheduled successfully' });
+  const { date, startTime, duration, agenda, meetLink, description, endTime } = req.body;
+
+  if (!date || !startTime || !duration || !agenda || !meetLink || !description || !endTime) {
+      return res.status(400).json({ success: false, message: 'All fields are required.' });
+  }
+
+  try {
+      const newMeeting = new Meeting({ date, startTime, duration, agenda, meetLink, description, endTime });
+      await newMeeting.save();
+      res.status(201).json({ success: true, message: 'Meeting scheduled successfully', meeting: newMeeting });
+  } catch (error) {
+      console.error('Error scheduling meeting:', error);
+      res.status(500).json({ success: false, error: 'Server Error' });
+  }
 });
 
-// Get Meetings
-app.get('/api/login', async (req, res) => {
-    const meetings = await Meeting.find({ userId: req.userId });
-    res.json(meetings);
-});
 
-// Delete Meeting
-app.delete('/delete-meeting/:id', async (req, res) => {
-    const { id } = req.params;
-    await Meeting.findByIdAndDelete(id);
-    res.json({ message: 'Meeting deleted successfully' });
-});
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/');
+    },
+    filename: function (req, file, cb) {
+      cb(null, Date.now() + '-' + file.originalname);
+    },
+  });
+  
+  const upload = multer({ storage });
+  
+  // Routes
+  
+  // Endpoint to fetch existing data
+  // Serve PDF file by its MongoDB ID
+  // Save uploaded data and file
+app.post('/upload-data', upload.single('pdfFile'), async (req, res) => {
+    try {
+      const newData = new Data({
+        title: req.body.title,
+        description: req.body.description,
+        time: req.body.time,
+        pdfFile: {
+          filePath: `${req.file.filename}`,
+          contentType: req.file.mimetype,
+        },
+      });
+  
+      const savedData = await newData.save();
+      res.json(savedData);
+    } catch (error) {
+      console.error('Error saving data:', error);
+      res.status(500).send('Error saving data');
+    }
+  });
+  
+  // Retrieve saved data
+  app.get('/get-data', async (req, res) => {
+    try {
+      const data = await Data.find(); // Fetch all records from MongoDB
+      res.json(data);
+    } catch (error) {
+      console.error('Error retrieving data:', error);
+      res.status(500).send('Error retrieving data');
+    }
+  });
+  // Start server
+  app.get('/', (req, res) => {
+    res.send('Server running');
+  });
+  
 
-// Update Meeting Status
-app.put('/api/update-meeting-status', async (req, res) => {
-    const { id, status } = req.body;
-    const updatedMeeting = await Meeting.findByIdAndUpdate(id, { status }, { new: true });
+  app.put('/api/meetings/:id', async (req, res) => {
+  const { id } = req.params;
+  const { agenda, date, startTime, endTime, meetLink, status, description } = req.body;
+
+  try {
+    const updatedMeeting = await Meeting.findByIdAndUpdate(
+      id,
+      {
+        agenda,
+        date,
+        startTime,
+        endTime,
+        meetLink,
+        status,
+        description,
+      },
+      { new: true }
+    );
+
+    if (!updatedMeeting) {
+      return res.status(404).json({ error: 'Meeting not found' });
+    }
+
     res.json(updatedMeeting);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update meeting' });
+  }
 });
 
+// Route to delete a meeting
+app.delete('/api/meetings/:id', async (req, res) => {
+  const { id } = req.params;
 
-app.get("/", console.log("server is succefully running") )
-app.listen(port, () => {
+  try {
+    const deletedMeeting = await Meeting.findByIdAndDelete(id);
+
+    if (!deletedMeeting) {
+      return res.status(404).json({ error: 'Meeting not found' });
+    }
+
+    res.json({ message: 'Meeting deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete meeting' });
+  }
+});
+  app.listen(port, () => {
     console.log(`Server running on port ${port}`);
-});
+  });

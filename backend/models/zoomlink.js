@@ -8,8 +8,8 @@ const meetingSchema = new mongoose.Schema({
     meetLink: { type: String, required: true },
     description: { type: String, required: true },
     endTime: { type: String },
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    status: { type: String, default: 'Scheduled' }
+    status: { type: String, default: 'Scheduled' },
+    meet:{type:Number}
 });
 
 const Meeting = mongoose.model('Meeting', meetingSchema);

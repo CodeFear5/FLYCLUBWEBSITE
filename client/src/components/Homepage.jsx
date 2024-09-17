@@ -1,6 +1,6 @@
 import React from "react";
-import "./styles/Homepage.css"; // Ensure to import your CSS file
-import sampleImage from './Images/homepage_student_discuss.jpeg'; // Replace with your image path
+import "./styles/Homepage.css"; 
+import sampleImage from './Images/homepage_student_discuss.jpeg'; 
 
 
 

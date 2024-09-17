@@ -5,17 +5,17 @@ body {
 
 .student-cards-section {
   display: flex;
-  flex-direction: column; /* Stack heading and content vertically */
+  flex-direction: column; 
   align-items: center;
   justify-content: center;
   position: relative;
   padding: 20px;
   background-color: gray;
-  height: 300px; /* Adjust height as needed */
+  height: 300px; 
 }
 
 .feedback-heading {
-  margin-bottom: 20px; /* Space between heading and cards */
+  margin-bottom: 20px; 
 }
 
 .feedback-heading h2 {
@@ -38,9 +38,9 @@ body {
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 33.33%; /* 3 cards per view */
+  width: 33.33%; 
   box-sizing: border-box;
-  margin-right: 20px; /* Space between cards */
+  margin-right: 20px;
 }
 
 .student-image {

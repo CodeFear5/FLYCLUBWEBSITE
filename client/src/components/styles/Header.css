@@ -7,24 +7,23 @@ body {
   line-height: 1.6;
 }
 
-/* Header styles */
 .Header {
   display: flex;
   justify-content: space-between; 
   align-items: center; 
   padding: 10px 20px;
   background-color: #fff;
-  position: fixed; /* Fixed position */
-  top: 0; /* Align to the top */
-  left: 0; /* Align to the left edge */
-  width: 100%; /* Full width of the viewport */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional shadow for better separation */
-  z-index: 1000; /* Ensure it stays above other content */
+  position: fixed;
+  top: 0; 
+  left: 0;
+  width: 100%; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  z-index: 1000; 
 }
 
-/* Adjust body content to account for fixed header */
+
 body {
-  padding-top: 60px; /* Adjust based on header height */
+  padding-top: 60px; 
 }
 
 .logo-section {

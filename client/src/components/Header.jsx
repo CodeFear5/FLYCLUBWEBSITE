@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './styles/Header.css';
 import flylogo from './Images/fly_logo.jpg';
-import profile from './Images/profile.jpeg';
+import image5 from "./Images/image5.jpeg";
 import ProfileDropdown from './ProfileDropdown';
 
 function Header() {
@@ -13,7 +13,6 @@ function Header() {
     setShowProfileDropdown(!showProfileDropdown);
   };
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (profileRef.current && !profileRef.current.contains(event.target)) {
@@ -39,13 +38,13 @@ function Header() {
         <ul>
           <li><Link to="/">Home</Link></li>
           <li><Link to="/sessions">Sessions</Link></li>
-          <li><Link to="/history">Session history</Link></li>
+          <li><Link to="/history">Activities</Link></li>
           <li><Link to="/login">Login</Link></li>
         </ul>
       </nav>
       <div className="Profile-section" ref={profileRef}>
         <img
-          src={profile}
+          src={image5}
           alt="profile_photo"
           onClick={toggleProfileDropdown}
           style={{ cursor: 'pointer' }}

@@ -1,12 +1,16 @@
 import React from 'react';
 import './styles/Members.css';
-import img from './Images/profile.jpeg'
+import image1 from "./Images/image1.jpeg";
+import image2 from "./Images/image2.jpeg";
+import image3 from "./Images/image3.jpeg";
+import image4 from "./Images/image4.jpeg";
+import image5 from "./Images/image5.jpeg";
 const members = [
-  { id: 1, name: "Alice Johnson", position: "President", image: img },
-  { id: 2, name: "Bob Smith", position: "Vice President", image: img },
-  { id: 3, name: "Carol Davis", position: "Secretary", image: img },
-  { id: 4, name: "David Brown", position: "Treasurer", image: img },
-  { id: 5, name: "Eve Wilson", position: "Member", image: img },
+  { id: 1, name: "July", position: "President", image: image1 },
+  { id: 2, name: "aryan", position: "Vice President", image: image2 },
+  { id: 3, name: "shravanthi", position: "Secretary", image: image3 },
+  { id: 4, name: "John", position: "Treasurer", image: image4 },
+  { id: 5, name: "susan", position: "Member", image: image5},
 ];
 
 function ClubMembers() {

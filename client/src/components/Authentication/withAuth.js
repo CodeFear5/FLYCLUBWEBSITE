@@ -14,16 +14,7 @@ const withAuth = (WrappedComponent) => {
           return;
         }
 
-        try {
-          await axios.get("https://flyclubwebsite-uarj.vercel.app/api/home", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-        } catch (err) {
-          localStorage.removeItem("token");
-          navigate("/");
-        }
+        
       };
 
       checkAuth();

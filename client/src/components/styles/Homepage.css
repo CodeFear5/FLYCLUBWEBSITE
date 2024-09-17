@@ -8,8 +8,8 @@ body {
 .content-wrapper {
   padding: 100px;
   display: flex;
-  justify-content: space-between; /* Spaces out the text and the image */
-  align-items: flex-start; /* Aligns items to the top */
+  justify-content: space-between; 
+  align-items: flex-start;
   padding: 20px 40px;
   background: linear-gradient(90deg, rgba(116, 134, 255, 1) 0%, rgba(241, 241, 255, 1) 100%);
   color: white;
@@ -56,7 +56,7 @@ a {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding-top: 10px; /* Adjust as per your navbar height */
+  padding-top: 10px; 
 }
 
 .image-section img {

@@ -1,14 +1,18 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "./styles/Feedback.css";
-import sampleImage from "./Images/profile.jpeg";
+import image1 from "./Images/image1.jpeg";
+import image2 from "./Images/image2.jpeg";
+import image3 from "./Images/image3.jpeg";
+import image4 from "./Images/image4.jpeg";
+import image5 from "./Images/image5.jpeg";
 
 function App() {
   const students = [
-    { id: 1, name: "Student 1", message: "This is a great program!", image: sampleImage },
-    { id: 2, name: "Student 2", message: "I learned so much!", image: sampleImage },
-    { id: 3, name: "Student 3", message: "Highly recommend to everyone!", image: sampleImage },
-    { id: 4, name: "Student 4", message: "Fantastic mentors and resources.", image: sampleImage },
-    { id: 5, name: "Student 5", message: "This has changed my career.", image: sampleImage },
+    { id: 1, name: "kavya", message: "This is a great program!", image: image1 },
+    { id: 2, name: "John", message: "I learned so much!", image: image2 },
+    { id: 3, name: "Nisarga", message: "Highly recommend to everyone!", image: image3 },
+    { id: 4, name: " Akash", message: "Fantastic mentors and resources.", image: image4 },
+    { id: 5, name: "Dimple", message: "This has changed my career.", image: image5 },
   ];
 
   const [startIndex, setStartIndex] = useState(0);

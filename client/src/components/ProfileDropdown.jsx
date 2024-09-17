@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import './styles/ProfileDropdown.css';
-
 function ProfileDropdown({ onClose }) {
   const [profileData, setProfileData] = useState({
-    name: 'John Doe',
-    email: 'john.doe@example.com',
+    name: 'Susa silver',
+    email: 'susan.doe@example.com',
   });
 
   const handleSaveClick = () => {

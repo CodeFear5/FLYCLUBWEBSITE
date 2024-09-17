@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import './styles/Sessions.css'; // Import the CSS file for styling
+import './styles/Sessions.css'; 
 import axios from 'axios';
 import MeetingCard from './MeetingCard';
 
 const Dashboard = () => {
-  const [showForm, setShowForm] = useState(false); // State to toggle form visibility
+  const [showForm, setShowForm] = useState(false); 
   const [formData, setFormData] = useState({
     date: '',
     startTime: '',
@@ -17,22 +17,18 @@ const Dashboard = () => {
 
   const [Umeet, setUmeet] = useState(0);
   const [Tmeet, setTmeet] = useState(0);
-  const [cmeet, setCmeet] = useState(0);
-  const [meetings, setMeetings] = useState([]); // To hold the list of meetings
+  const [meetings, setMeetings] = useState([]); 
 
-  // Retrieve JWT token from localStorage
   const token = localStorage.getItem('token');
 
-  // Calculate end time based on start time and duration
   const calculateEndTime = (startTime, duration) => {
     const [hours, minutes] = startTime.split(':').map(Number);
     const newTime = new Date();
     newTime.setHours(hours);
     newTime.setMinutes(minutes + Number(duration));
-    return newTime.toTimeString().slice(0, 5); // return as HH:MM
+    return newTime.toTimeString().slice(0, 5); 
   };
 
-  // Handle input change
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => {
@@ -50,10 +46,8 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchMeetings = async () => {
       try {
-        const response = await axios.get("https://flyclubwebsite-uarj.vercel.app/get/meeting-shedule", {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+        const response = await axios.get("http://localhost:3000/get/meeting-shedule", {
+          
         });
         console.log("Fetched Meetings: ", response.data);
         setMeetings(response.data);
@@ -65,21 +59,16 @@ const Dashboard = () => {
     fetchMeetings();
   }, [token]);
 
-  // Toggle form visibility
   const toggleForm = () => setShowForm(!showForm);
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('https://flyclubwebsite-uarj.vercel.app/api/meeting-shedule', formData, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+      const response = await axios.post('http://localhost:3000/api/meeting-shedule', formData, {
+        
       });
       console.log(response.data);
 
-      // Reset form and hide it
       setFormData({
         date: '',
         startTime: '',
@@ -91,8 +80,8 @@ const Dashboard = () => {
       });
 
       if (response.data.message === 'Meeting scheduled successfully') {
-        setUmeet((prevUmeet) => prevUmeet + 1); // Increment upcoming meetings count
-        setTmeet((prevTmeet) => prevTmeet + 1); // Increment total meetings count
+        setUmeet((prevUmeet) => prevUmeet + 1); 
+        setTmeet((prevTmeet) => prevTmeet + 1); 
       }
 
       setShowForm(false);
@@ -101,22 +90,6 @@ const Dashboard = () => {
     }
   };
 
-  // Handle meeting deletion
-  const handleDeleteMeeting = async (meetingId) => {
-    try {
-      await axios.delete(`https://flyclubwebsite-uarj.vercel.app/delete-meeting/${meetingId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      setMeetings((prevMeetings) => prevMeetings.filter((meeting) => meeting._id !== meetingId));
-      setCmeet((prevCmeet) => prevCmeet + 1); // Increment cancelled/completed meetings count
-    } catch (error) {
-      console.error('Error deleting meeting:', error);
-    }
-  };
-
-  // Handle form cancel
   const handleCancel = () => {
     setShowForm(false);
   };
@@ -139,7 +112,7 @@ const Dashboard = () => {
               <div className="icon-container">
                 <i className="fas fa-calendar-alt"></i>
               </div>
-              <p className="circle">{Umeet}</p>
+              <p className="circle">{1}</p>
             </div>
           </div>
         </div>
@@ -148,25 +121,29 @@ const Dashboard = () => {
           <div className="icon-container">
             <i className="fas fa-trophy"></i>
           </div>
-          <p><strong>{Tmeet}</strong> Total Sessions Created</p>
+          <p><strong>{1}</strong> Total Sessions Created</p>
         </div>
 
         <div className="section total-sessions-completed">
           <div className="icon-container">
             <i className="fas fa-bullseye"></i>
           </div>
-          <p><strong>{cmeet}</strong> Total Sessions Completed/Cancelled</p>
+          <p><strong>{1}</strong> Total Sessions Completed/Cancelled</p>
         </div>
 
         <div className="sessions-container">
           {meetings.length > 0 ? (
             meetings.map((meeting) => (
-              <MeetingCard key={meeting._id} meeting={meeting} onDelete={handleDeleteMeeting} />
+              <MeetingCard key={meeting._id} meeting={meeting}  />
             ))
           ) : (
             <p>No meetings scheduled.</p>
           )}
         </div>
+
+        <button className="floating-btn" onClick={toggleForm}>
+          <i className="fas fa-plus"></i>
+        </button>
       </div>
 
       {showForm && (

@@ -11,7 +11,7 @@ import Register from './components/Authentication/RegisterPage.jsx';
 import LoginPage from './components/Authentication/LoginPage.jsx';
 import PrivateRoute from './components/Authentication/PrivateRoute.jsx';
 import ProtectedPage from './components/Authentication/ProtectedPage.jsx';
-import Clubhistory from './components/Clubhistory.jsx'
+import History from './components/history.jsx';
 const AppContent = () => {
   return (
     <div className="App">
@@ -32,7 +32,7 @@ const AppContent = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<Register />} />
         <Route path="/meetcard" element={<MeetingCard />} />
-        <Route path="/history" element={<Clubhistory />} />
+        <Route path="/history" element={< History/>} />
         <Route path="/log" element={<PrivateRoute><ProtectedPage /></PrivateRoute>} />
       </Routes>
     </div>
