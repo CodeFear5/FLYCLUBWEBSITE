@@ -28,7 +28,8 @@ mongoose.connect(mongodbURI)
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({
-    origin:['https://flyclub.vercel.app', 'http://localhost:3000'], // Adjust this to your frontend URL in production
+    origin:['https://flyclub.vercel.app', 'http://localhost:3000'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Adjust this to your frontend URL in production
 }));
 
 
