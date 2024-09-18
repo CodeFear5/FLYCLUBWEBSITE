@@ -12,6 +12,8 @@ import Data from './models/history.js'
 import path from 'path';
 import { fileURLToPath } from 'url'; 
 import { dirname } from 'path'; 
+import fs from 'fs'; // Import fs to handle file system operations
+
 dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -26,9 +28,19 @@ mongoose.connect(mongodbURI)
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({
-    origin: 'https://flyclub.vercel.app', // Adjust this to your frontend URL in production
+    origin:['https://flyclub.vercel.app', 'http://localhost:3000'], // Adjust this to your frontend URL in production
 }));
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
+
+
+
+// Ensure the uploads directory exists
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir);
+}
+app.use('/uploads', express.static(uploadsDir));
+
 app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
 
@@ -95,48 +107,48 @@ app.post('/api/meeting-shedule', async (req, res) => {
 });
 
 
+// File upload configuration with multer
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, path.join(__dirname, '../uploads/'));
-    },
-    filename: function (req, file, cb) {
-      cb(null, Date.now() + '-' + file.originalname);
-    },
-  });
-  
-  const upload = multer({ storage });
-  
- 
+  destination: function (req, file, cb) {
+      cb(null, uploadsDir); // Save the files in the uploads directory
+  },
+  filename: function (req, file, cb) {
+      cb(null, Date.now() + '-' + file.originalname); // Create unique filename
+  },
+});
+
+const upload = multer({ storage });
+
+// History data routes
 app.post('/upload-data', upload.single('pdfFile'), async (req, res) => {
-    try {
+  try {
       const newData = new Data({
-        title: req.body.title,
-        description: req.body.description,
-        time: req.body.time,
-        pdfFile: {
-          filePath: `${req.file.filename}`,
-          contentType: req.file.mimetype,
-        },
+          title: req.body.title,
+          description: req.body.description,
+          time: req.body.time,
+          pdfFile: {
+              filePath: `${req.file.filename}`,
+              contentType: req.file.mimetype,
+          },
       });
-  
+
       const savedData = await newData.save();
       res.json(savedData);
-    } catch (error) {
+  } catch (error) {
       console.error('Error saving data:', error);
       res.status(500).send('Error saving data');
-    }
-  });
-  
-  app.get('/get-data', async (req, res) => {
-    try {
-      const data = await Data.find(); 
+  }
+});
+
+app.get('/get-data', async (req, res) => {
+  try {
+      const data = await Data.find();
       res.json(data);
-    } catch (error) {
+  } catch (error) {
       console.error('Error retrieving data:', error);
       res.status(500).send('Error retrieving data');
-    }
-  });
-
+  }
+});
   app.get('/', (req, res) => {
     res.send('Server running');
   });

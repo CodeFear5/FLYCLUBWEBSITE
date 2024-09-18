@@ -8,5 +8,4 @@
      { "src": "/uploads/(.*)", "dest": "/uploads/$1" },
      { "src": "/(.*)", "dest": "server.js" }
    ]
- }
- 
+}
