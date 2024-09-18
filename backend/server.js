@@ -5,10 +5,10 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import Meeting from '../models/zoomlink.js';
-import User from '../models/User.js';
+import Meeting from './models/zoomlink.js';
+import User from './models/User.js';
 import multer  from 'multer'
-import Data from '../models/history.js'
+import Data from './models/history.js'
 import path from 'path';
 import { fileURLToPath } from 'url'; 
 import { dirname } from 'path'; 
@@ -18,9 +18,8 @@ const __dirname = dirname(__filename);
 const app = express();
 const port = process.env.PORT || 3000;
 const mongodbURI = process.env.MONGO_URI;
-console.log('MONGO_URI:', mongodbURI);
 
-mongoose.connect("mongodb+srv://codeinovator:codeinovator123@flyclubwebsite.wdsl3.mongodb.net/?retryWrites=true&w=majority&appName=FLYCLUBWEBSITE")
+mongoose.connect(mongodbURI)
     .then(() => console.log("MongoDB connected"))
     .catch(err => console.error("MongoDB connection error:", err));
 
