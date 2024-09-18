@@ -5,35 +5,30 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import Meeting from './models/zoomlink.js'; // Import Meeting model
-import User from './models/User.js';
+import Meeting from '../models/zoomlink.js';
+import User from '../models/User.js';
 import multer  from 'multer'
-import Data from './models/history.js'
+import Data from '../models/history.js'
 import path from 'path';
-import { fileURLToPath } from 'url'; // Import required for ES module __dirname
-import { dirname } from 'path'; // Import dirname
-
+import { fileURLToPath } from 'url'; 
+import { dirname } from 'path'; 
 dotenv.config();
-// Define __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const app = express();
 const port = process.env.PORT || 3000;
 const mongodbURI = process.env.MONGO_URI;
 
-// Connect to MongoDB
 mongoose.connect(mongodbURI)
     .then(() => console.log("MongoDB connected"))
     .catch(err => console.error("MongoDB connection error:", err));
 
-// Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({
     origin: 'http://localhost:3001', // Adjust this to your frontend URL in production
 }));
-app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
-// Routes
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
 
@@ -102,7 +97,7 @@ app.post('/api/meeting-shedule', async (req, res) => {
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, 'uploads/');
+      cb(null, path.join(__dirname, '../uploads/'));
     },
     filename: function (req, file, cb) {
       cb(null, Date.now() + '-' + file.originalname);
@@ -111,11 +106,7 @@ const storage = multer.diskStorage({
   
   const upload = multer({ storage });
   
-  // Routes
-  
-  // Endpoint to fetch existing data
-  // Serve PDF file by its MongoDB ID
-  // Save uploaded data and file
+ 
 app.post('/upload-data', upload.single('pdfFile'), async (req, res) => {
     try {
       const newData = new Data({
@@ -136,17 +127,16 @@ app.post('/upload-data', upload.single('pdfFile'), async (req, res) => {
     }
   });
   
-  // Retrieve saved data
   app.get('/get-data', async (req, res) => {
     try {
-      const data = await Data.find(); // Fetch all records from MongoDB
+      const data = await Data.find(); 
       res.json(data);
     } catch (error) {
       console.error('Error retrieving data:', error);
       res.status(500).send('Error retrieving data');
     }
   });
-  // Start server
+
   app.get('/', (req, res) => {
     res.send('Server running');
   });
@@ -181,7 +171,6 @@ app.post('/upload-data', upload.single('pdfFile'), async (req, res) => {
   }
 });
 
-// Route to delete a meeting
 app.delete('/api/meetings/:id', async (req, res) => {
   const { id } = req.params;
 
@@ -200,3 +189,5 @@ app.delete('/api/meetings/:id', async (req, res) => {
   app.listen(port, () => {
     console.log(`Server running on port ${port}`);
   });
+
+export default app;
