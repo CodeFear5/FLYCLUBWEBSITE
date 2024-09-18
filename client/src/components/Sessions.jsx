@@ -46,7 +46,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchMeetings = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/get/meeting-shedule", {
+        const response = await axios.get("https://flyclubwebsite-backend.vercel.app/get/meeting-shedule", {
           
         });
         console.log("Fetched Meetings: ", response.data);
@@ -64,7 +64,7 @@ const Dashboard = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/api/meeting-shedule', formData, {
+      const response = await axios.post('https://flyclubwebsite-backend.vercel.app/api/meeting-shedule', formData, {
         
       });
       console.log(response.data);

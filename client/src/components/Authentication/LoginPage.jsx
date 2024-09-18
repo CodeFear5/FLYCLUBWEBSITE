@@ -11,7 +11,7 @@ const LoginPage = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:3000/api/login", {
+      const response = await axios.post("https://flyclubwebsite-backend.vercel.app/api/login", {
         username,
         password,
       });
@@ -19,10 +19,11 @@ const LoginPage = () => {
       if (response.status === 200) {
         console.log("Token:", response.data.token);
         localStorage.setItem("token", response.data.token); 
-        navigate("/"); 
+        navigate("/secure"); 
       }
     } catch (err) {
       alert("Invalid username or password");
+    
       console.error("Login error:", err.response?.data?.message || err.message);
     }
   };

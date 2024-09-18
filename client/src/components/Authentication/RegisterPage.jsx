@@ -13,13 +13,13 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:3000/api/register", {
+      await axios.post("https://flyclubwebsite-backend.vercel.app/api/register", {
         username,
         email,
         password,
       });
       alert("Registration successful");
-      navigate("/login");
+      navigate("/");
     } catch (err) {
       alert("Error while registering: " + (err.response?.data?.message || err.message));
       console.log(err);
@@ -28,7 +28,7 @@ const Register = () => {
 
   const loginPage = (e) => {
     e.preventDefault();
-    navigate("/login");
+    navigate("/");
   };
 
   const styles = {

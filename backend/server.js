@@ -26,7 +26,7 @@ mongoose.connect(mongodbURI)
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({
-    origin: 'http://localhost:3001', // Adjust this to your frontend URL in production
+    origin: 'https://flyclub.vercel.app', // Adjust this to your frontend URL in production
 }));
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 app.post('/api/login', async (req, res) => {

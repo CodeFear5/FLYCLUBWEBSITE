@@ -14,7 +14,7 @@ const History = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/get-data');
+        const response = await axios.get('https://flyclubwebsite-backend.vercel.app/get-data');
         setDataList(response.data); // Store fetched data in state
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -35,7 +35,7 @@ const History = () => {
     formData.append('time', time);
 
     try {
-      const response = await axios.post('http://localhost:3000/upload-data', formData);
+      const response = await axios.post('https://flyclubwebsite-backend.vercel.app/upload-data', formData);
       console.log('Data uploaded successfully:', response.data);
       
       setIsFormVisible(false);
@@ -117,7 +117,7 @@ const History = () => {
                   <td>{data.time}</td>
                   <td>
                     <a
-                      href={`http://localhost:3000/uploads/${data.pdfFile.filePath}`}
+                      href={`https://flyclubwebsite-backend.vercel.app/uploads/${data.pdfFile.filePath}`}
                       target="_blank"
                       rel="noopener noreferrer"
                     >

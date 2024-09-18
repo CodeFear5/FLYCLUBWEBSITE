@@ -17,7 +17,7 @@ const AppContent = () => {
     <div className="App">
       <Header />
       <Routes>
-        <Route path="/" element={
+        <Route path="/secure" element={
           <>
             <Homepage />
             <Members />
@@ -29,7 +29,7 @@ const AppContent = () => {
         <Route path="/members" element={<Members />} />
         <Route path="/feedback" element={<Feedback />} />
         <Route path="/sessions" element={<Sessions />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={<LoginPage />} />
         <Route path="/register" element={<Register />} />
         <Route path="/meetcard" element={<MeetingCard />} />
         <Route path="/history" element={< History/>} />
