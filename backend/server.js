@@ -9,14 +9,10 @@ import Meeting from './models/zoomlink.js';
 import User from './models/User.js';
 import multer  from 'multer'
 import Data from './models/history.js'
-import path from 'path';
 import { fileURLToPath } from 'url'; 
-import { dirname } from 'path'; 
-import fs from 'fs'; // Import fs to handle file system operations
 
 dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 const app = express();
 const port = process.env.PORT || 3000;
 const mongodbURI = process.env.MONGO_URI;
@@ -29,18 +25,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({
     origin:['https://flyclub.vercel.app', 'http://localhost:3000'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Adjust this to your frontend URL in production
+  
 }));
 
 
 
 
-// Ensure the uploads directory exists
-const uploadsDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir);
-}
-app.use('/uploads', express.static(uploadsDir));
+
 
 app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
@@ -108,48 +99,67 @@ app.post('/api/meeting-shedule', async (req, res) => {
 });
 
 
-// File upload configuration with multer
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-      cb(null, uploadsDir); // Save the files in the uploads directory
-  },
-  filename: function (req, file, cb) {
-      cb(null, Date.now() + '-' + file.originalname); // Create unique filename
-  },
-});
-
+              
+const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// History data routes
 app.post('/upload-data', upload.single('pdfFile'), async (req, res) => {
   try {
-      const newData = new Data({
-          title: req.body.title,
-          description: req.body.description,
-          time: req.body.time,
-          pdfFile: {
-              filePath: `${req.file.filename}`,
-              contentType: req.file.mimetype,
-          },
-      });
+    const newData = new Data({
+      title: req.body.title,
+      description: req.body.description,
+      time: req.body.time,
+      pdfFile: {
+        fileData: req.file.buffer,  // Store file data as binary (Buffer)
+        contentType: req.file.mimetype,
+        fileName: req.file.originalname,
+      },
+    });
 
-      const savedData = await newData.save();
-      res.json(savedData);
+    const savedData = await newData.save();
+    res.json(savedData);
   } catch (error) {
-      console.error('Error saving data:', error);
-      res.status(500).send('Error saving data');
+    console.error('Error saving data:', error);
+    res.status(500).send('Error saving data');
   }
 });
 
 app.get('/get-data', async (req, res) => {
   try {
-      const data = await Data.find();
-      res.json(data);
+    const data = await Data.find();
+    res.json(data);
   } catch (error) {
-      console.error('Error retrieving data:', error);
-      res.status(500).send('Error retrieving data');
+    console.error('Error retrieving data:', error);
+    res.status(500).send('Error retrieving data');
   }
 });
+
+app.get('/download-pdf/:id', async (req, res) => {
+  try {
+    const data = await Data.findById(req.params.id);
+    if (!data || !data.pdfFile) {
+      return res.status(404).send('PDF not found');
+    }
+
+    res.set({
+      'Content-Type': data.pdfFile.contentType,
+      'Content-Disposition': `attachment; filename="${data.pdfFile.fileName}"`,
+    });
+    res.send(data.pdfFile.fileData);  // Send the binary data as file
+  } catch (error) {
+    console.error('Error downloading PDF:', error);
+    res.status(500).send('Error downloading PDF');
+  }
+});
+
+
+
+
+
+
+
+
+
   app.get('/', (req, res) => {
     res.send('Server running');
   });

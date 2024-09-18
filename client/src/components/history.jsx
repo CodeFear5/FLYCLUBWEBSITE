@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import './styles/history.css'; // Make sure you have this CSS file in place
+import './styles/history.css';  // Ensure you have the correct CSS file for styling
 
 const History = () => {
   const [isFormVisible, setIsFormVisible] = useState(false);
@@ -15,7 +15,7 @@ const History = () => {
   const fetchData = useCallback(async () => {
     try {
       const response = await axios.get('https://flyclubwebsite-backend.vercel.app/get-data');
-      setDataList(response.data); // Store fetched data in state
+      setDataList(response.data);  // Store fetched data in state
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -48,7 +48,7 @@ const History = () => {
 
       // Update data list with the newly uploaded data
       setDataList([...dataList, response.data]);
-      setIsFormVisible(false); // Close form after successful submission
+      setIsFormVisible(false);  // Close form after successful submission
     } catch (error) {
       console.error('Error uploading data:', error);
       setUploadError('Failed to upload data. Please try again.');
@@ -123,7 +123,7 @@ const History = () => {
                   <td>{new Date(data.time).toLocaleDateString()}</td>
                   <td>
                     <a
-                      href={`https://flyclubwebsite-backend.vercel.app/uploads/${data.pdfFile.filePath} `}
+                      href={`https://flyclubwebsite-backend.vercel.app/download-pdf/${data._id}`}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
