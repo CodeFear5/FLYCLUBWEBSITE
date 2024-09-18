@@ -19,11 +19,10 @@ const LoginPage = () => {
       if (response.status === 200) {
         console.log("Token:", response.data.token);
         localStorage.setItem("token", response.data.token); 
-        navigate("/secure"); 
+        navigate("/"); 
       }
     } catch (err) {
       alert("Invalid username or password");
-    
       console.error("Login error:", err.response?.data?.message || err.message);
     }
   };

@@ -123,8 +123,8 @@ const History = () => {
                   <td>{new Date(data.time).toLocaleDateString()}</td>
                   <td>
                     <a
-  href={data.pdfFile?.filePath ? `https://flyclubwebsite-backend.vercel.app/uploads/${data.pdfFile.filePath}` : '#'}
-  target="_blank"
+                      href={`https://flyclubwebsite-backend.vercel.app/uploads/${data.pdfFile.filePath} `}
+                      target="_blank"
                       rel="noopener noreferrer"
                     >
                       View PDF

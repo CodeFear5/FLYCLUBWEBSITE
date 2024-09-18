@@ -19,7 +19,7 @@ const Register = () => {
         password,
       });
       alert("Registration successful");
-      navigate("/");
+      navigate("/login");
     } catch (err) {
       alert("Error while registering: " + (err.response?.data?.message || err.message));
       console.log(err);
@@ -28,7 +28,7 @@ const Register = () => {
 
   const loginPage = (e) => {
     e.preventDefault();
-    navigate("/");
+    navigate("/login");
   };
 
   const styles = {

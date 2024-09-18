@@ -36,10 +36,10 @@ function Header() {
       </div>
       <nav className="links">
         <ul>
-          <li><Link to="/secure">Home</Link></li>
+          <li><Link to="/">Home</Link></li>
           <li><Link to="/sessions">Sessions</Link></li>
           <li><Link to="/feedback">Feedback</Link></li>
-          <li><Link to="/">Login</Link></li>
+          <li><Link to="/login">Login</Link></li>
         </ul>
       </nav>
       <div className="Profile-section" ref={profileRef}>
