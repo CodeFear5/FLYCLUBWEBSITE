@@ -1,10 +1,12 @@
 {
-    "version": 2,
-    "name": "flyclubwebsite-backend",
-    "builds": [
-       { "src": "server.js", "use": "@vercel/node" }
-    ],
-    "routes": [
-       { "src": "/(.*)", "dest": "/server.js" }
-    ]
+   "version": 2,
+   "name": "flyclubwebsite-backend",
+   "builds": [
+     { "src": "server.js", "use": "@vercel/node" }
+   ],
+   "routes": [
+     { "src": "/uploads/(.*)", "dest": "/uploads/$1" },
+     { "src": "/(.*)", "dest": "server.js" }
+   ]
  }
+ 
